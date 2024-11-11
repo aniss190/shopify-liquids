@@ -1,0 +1,912 @@
+{% schema %}
+{
+  "name": "Mad - Tableau comparatif",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Mise en page"
+    },
+    {
+      "type": "range",
+      "id": "columns_width",
+      "min": 400,
+      "max": 550,
+      "step": 50,
+      "unit": "px",
+      "label": "Largeur des colonnes (Desktop)",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "columns_gap",
+      "min": 16,
+      "max": 64,
+      "step": 8,
+      "unit": "px",
+      "label": "Espacement entre les colonnes (Desktop)",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "columns_gap_mobile",
+      "min": 16,
+      "max": 48,
+      "step": 8,
+      "unit": "px",
+      "label": "Espacement entre les colonnes (Mobile)",
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "margin_mobile",
+      "label": "Marge externe mobile",
+      "options": [
+        { "value": "0", "label": "0px" },
+        { "value": "4", "label": "4px" },
+        { "value": "8", "label": "8px" },
+        { "value": "16", "label": "16px" },
+        { "value": "24", "label": "24px" },
+        { "value": "32", "label": "32px" }
+      ],
+      "default": "16"
+    },
+    {
+      "type": "header",
+      "content": "Titres des tableaux"
+    },
+    {
+      "type": "select",
+      "id": "title_position",
+      "label": "Position des titres",
+      "options": [
+        { "value": "inside", "label": "Dans les tableaux" },
+        { "value": "outside", "label": "Au-dessus des tableaux" }
+      ],
+      "default": "inside"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Taille des titres",
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Épaisseur des titres",
+      "options": [
+        { "value": "400", "label": "Normal (400)" },
+        { "value": "500", "label": "Medium (500)" },
+        { "value": "600", "label": "Semi-bold (600)" },
+        { "value": "700", "label": "Bold (700)" },
+        { "value": "800", "label": "Extra-bold (800)" },
+        { "value": "900", "label": "Black (900)" }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "text",
+      "id": "left_table_title",
+      "label": "Titre du tableau gauche"
+    },
+    {
+      "type": "text",
+      "id": "right_table_title",
+      "label": "Titre du tableau droite"
+    },
+    {
+      "type": "select",
+      "id": "title_alignment",
+      "label": "Alignement des titres",
+      "options": [
+        { "value": "left", "label": "Gauche" },
+        { "value": "center", "label": "Centré" },
+        { "value": "right", "label": "Droite" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Style des icônes"
+    },
+    {
+      "type": "range",
+      "id": "icons_size",
+      "min": 20,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Taille des icônes",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Style du tableau gauche"
+    },
+    {
+      "type": "color",
+      "id": "left_bg",
+      "label": "Couleur de fond",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "left_text_color",
+      "label": "Couleur du texte",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "left_icon_color",
+      "label": "Couleur des icônes",
+      "default": "#00A300"
+    },
+    {
+      "type": "checkbox",
+      "id": "left_align_right",
+      "label": "Aligner le contenu à droite (Desktop)",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Style du tableau droite"
+    },
+    {
+      "type": "color",
+      "id": "right_bg",
+      "label": "Couleur de fond",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "right_text_color",
+      "label": "Couleur du texte",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "right_icon_color",
+      "label": "Couleur des icônes",
+      "default": "#CC0000"
+    },
+    {
+      "type": "header",
+      "content": "Bouton d'action"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Lien du bouton"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Texte du bouton",
+      "default": "Commencer"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "comparison_item",
+      "name": "Élément de comparaison",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Icône gauche"
+        },
+        {
+          "type": "select",
+          "id": "left_icon",
+          "label": "Choix de l'icône",
+          "options": [
+            {
+              "value": "none",
+              "label": "Aucune"
+            },
+            {
+              "value": "picto-coupon",
+              "label": "Shop - Coupon"
+            },
+            {
+              "value": "picto-percent",
+              "label": "Shop - Percent"
+            },
+            {
+              "value": "picto-gift",
+              "label": "Shop - Gift"
+            },
+            {
+              "value": "picto-star",
+              "label": "Shop - Star"
+            },
+            {
+              "value": "picto-like",
+              "label": "Shop - Like"
+            },
+            {
+              "value": "picto-building",
+              "label": "Shop - Building"
+            },
+            {
+              "value": "picto-love",
+              "label": "Shop - Love"
+            },
+            {
+              "value": "picto-award-gift",
+              "label": "Shop - Award gift"
+            },
+            {
+              "value": "picto-happy",
+              "label": "Shop - Happy"
+            },
+            {
+              "value": "picto-box",
+              "label": "Shipping - Box"
+            },
+            {
+              "value": "picto-pin",
+              "label": "Shipping - Pin"
+            },
+            {
+              "value": "picto-timer",
+              "label": "Shipping - Timer"
+            },
+            {
+              "value": "picto-validation",
+              "label": "Shipping - Validation"
+            },
+            {
+              "value": "picto-truck",
+              "label": "Shipping - Truck"
+            },
+            {
+              "value": "picto-return",
+              "label": "Shipping - Return"
+            },
+            {
+              "value": "picto-earth",
+              "label": "Shipping - Earth"
+            },
+            {
+              "value": "picto-plane",
+              "label": "Shipping - Plane"
+            },
+            {
+              "value": "picto-credit-card",
+              "label": "Payment - Credit card"
+            },
+            {
+              "value": "picto-lock",
+              "label": "Payment - Lock"
+            },
+            {
+              "value": "picto-shield",
+              "label": "Payment - Shield"
+            },
+            {
+              "value": "picto-secure-profile",
+              "label": "Payment - Secure profile"
+            },
+            {
+              "value": "picto-money",
+              "label": "Payment - Money"
+            },
+            {
+              "value": "picto-recycle",
+              "label": "Ecology - Recycle"
+            },
+            {
+              "value": "picto-leaf",
+              "label": "Ecology - Leaf"
+            },
+            {
+              "value": "picto-tree",
+              "label": "Ecology - Tree"
+            },
+            {
+              "value": "account",
+              "label": "Interface - Account"
+            },
+            {
+              "value": "arrow-left",
+              "label": "Interface - Arrow Left"
+            },
+            {
+              "value": "arrow-right",
+              "label": "Interface - Arrow Right"
+            },
+            {
+              "value": "cart",
+              "label": "Interface - Cart"
+            },
+            {
+              "value": "check",
+              "label": "Interface - Check"
+            },
+            {
+              "value": "close",
+              "label": "Interface - Close"
+            },
+            {
+              "value": "delete",
+              "label": "Interface - Delete"
+            },
+            {
+              "value": "edit",
+              "label": "Interface - Edit"
+            },
+            {
+              "value": "error",
+              "label": "Interface - Error"
+            },
+            {
+              "value": "eye",
+              "label": "Interface - Eye"
+            },
+            {
+              "value": "filter",
+              "label": "Interface - Filter"
+            },
+            {
+              "value": "heart",
+              "label": "Interface - Heart"
+            },
+            {
+              "value": "home",
+              "label": "Interface - Home"
+            },
+            {
+              "value": "menu",
+              "label": "Interface - Menu"
+            },
+            {
+              "value": "minus",
+              "label": "Interface - Minus"
+            },
+            {
+              "value": "plus",
+              "label": "Interface - Plus"
+            },
+            {
+              "value": "search",
+              "label": "Interface - Search"
+            },
+            {
+              "value": "settings",
+              "label": "Interface - Settings"
+            },
+            {
+              "value": "share",
+              "label": "Interface - Share"
+            },
+            {
+              "value": "user",
+              "label": "Interface - User"
+            },
+            {
+              "value": "warning",
+              "label": "Interface - Warning"
+            }
+          ],
+          "default": "check"
+        },
+        {
+          "type": "header",
+          "content": "Icône droite"
+        },
+        {
+          "type": "select",
+          "id": "right_icon",
+          "label": "Choix de l'icône",
+          "options": [
+            {
+              "value": "none",
+              "label": "Aucune"
+            },
+            {
+              "value": "picto-coupon",
+              "label": "Shop - Coupon"
+            },
+            {
+              "value": "picto-percent",
+              "label": "Shop - Percent"
+            },
+            {
+              "value": "picto-gift",
+              "label": "Shop - Gift"
+            },
+            {
+              "value": "picto-star",
+              "label": "Shop - Star"
+            },
+            {
+              "value": "picto-like",
+              "label": "Shop - Like"
+            },
+            {
+              "value": "picto-building",
+              "label": "Shop - Building"
+            },
+            {
+              "value": "picto-love",
+              "label": "Shop - Love"
+            },
+            {
+              "value": "picto-award-gift",
+              "label": "Shop - Award gift"
+            },
+            {
+              "value": "picto-happy",
+              "label": "Shop - Happy"
+            },
+            {
+              "value": "picto-box",
+              "label": "Shipping - Box"
+            },
+            {
+              "value": "picto-pin",
+              "label": "Shipping - Pin"
+            },
+            {
+              "value": "picto-timer",
+              "label": "Shipping - Timer"
+            },
+            {
+              "value": "picto-validation",
+              "label": "Shipping - Validation"
+            },
+            {
+              "value": "picto-truck",
+              "label": "Shipping - Truck"
+            },
+            {
+              "value": "picto-return",
+              "label": "Shipping - Return"
+            },
+            {
+              "value": "picto-earth",
+              "label": "Shipping - Earth"
+            },
+            {
+              "value": "picto-plane",
+              "label": "Shipping - Plane"
+            },
+            {
+              "value": "picto-credit-card",
+              "label": "Payment - Credit card"
+            },
+            {
+              "value": "picto-lock",
+              "label": "Payment - Lock"
+            },
+            {
+              "value": "picto-shield",
+              "label": "Payment - Shield"
+            },
+            {
+              "value": "picto-secure-profile",
+              "label": "Payment - Secure profile"
+            },
+            {
+              "value": "picto-money",
+              "label": "Payment - Money"
+            },
+            {
+              "value": "picto-recycle",
+              "label": "Ecology - Recycle"
+            },
+            {
+              "value": "picto-leaf",
+              "label": "Ecology - Leaf"
+            },
+            {
+              "value": "picto-tree",
+              "label": "Ecology - Tree"
+            },
+            {
+              "value": "account",
+              "label": "Interface - Account"
+            },
+            {
+              "value": "arrow-left",
+              "label": "Interface - Arrow Left"
+            },
+            {
+              "value": "arrow-right",
+              "label": "Interface - Arrow Right"
+            },
+            {
+              "value": "cart",
+              "label": "Interface - Cart"
+            },
+            {
+              "value": "check",
+              "label": "Interface - Check"
+            },
+            {
+              "value": "close",
+              "label": "Interface - Close"
+            },
+            {
+              "value": "delete",
+              "label": "Interface - Delete"
+            },
+            {
+              "value": "edit",
+              "label": "Interface - Edit"
+            },
+            {
+              "value": "error",
+              "label": "Interface - Error"
+            },
+            {
+              "value": "eye",
+              "label": "Interface - Eye"
+            },
+            {
+              "value": "filter",
+              "label": "Interface - Filter"
+            },
+            {
+              "value": "heart",
+              "label": "Interface - Heart"
+            },
+            {
+              "value": "home",
+              "label": "Interface - Home"
+            },
+            {
+              "value": "menu",
+              "label": "Interface - Menu"
+            },
+            {
+              "value": "minus",
+              "label": "Interface - Minus"
+            },
+            {
+              "value": "plus",
+              "label": "Interface - Plus"
+            },
+            {
+              "value": "search",
+              "label": "Interface - Search"
+            },
+            {
+              "value": "settings",
+              "label": "Interface - Settings"
+            },
+            {
+              "value": "share",
+              "label": "Interface - Share"
+            },
+            {
+              "value": "user",
+              "label": "Interface - User"
+            },
+            {
+              "value": "warning",
+              "label": "Interface - Warning"
+            }
+          ],
+          "default": "error"
+        },
+        {
+          "type": "header",
+          "content": "Contenu"
+        },
+        {
+          "type": "select",
+          "id": "content_alignment",
+          "label": "Alignement vertical du contenu",
+          "options": [
+            {"value": "center", "label": "Centré"},
+            {"value": "top", "label": "Aligné en haut"}
+          ],
+          "default": "center"
+        },
+        {
+          "type": "text",
+          "id": "left_title",
+          "label": "Titre gauche"
+        },
+        {
+          "type": "text",
+          "id": "right_title",
+          "label": "Titre droite"
+        },
+        {
+          "type": "textarea",
+          "id": "left_text",
+          "label": "Texte gauche"
+        },
+        {
+          "type": "textarea",
+          "id": "right_text",
+          "label": "Texte droite"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Mad - Tableau comparatif",
+      "blocks": [
+        {
+          "type": "comparison_item"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+.mad-comparison-section {
+ padding: 2rem 0;
+ max-width: 1200px;
+ margin: 0 auto;
+}
+
+@media screen and (max-width: 768px) {
+ .mad-comparison-section {
+   margin: {{ section.settings.margin_mobile }}px;
+ }
+}
+
+.mad-comparison-body {
+ display: flex;
+ gap: {{ section.settings.columns_gap }}px;
+ margin-bottom: 2rem;
+ justify-content: center;
+ flex-wrap: wrap;
+}
+
+.mad-comparison-columns {
+ position: relative;
+ display: flex;
+ gap: {{ section.settings.columns_gap }}px;
+ justify-content: center;
+ flex-wrap: wrap;
+ width: 100%;
+}
+
+.mad-comparison-column-title {
+  font-size: {{ section.settings.title_size }}px;
+  font-weight: {{ section.settings.title_weight }};
+  text-align: {{ section.settings.title_alignment }};
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
+
+.mad-comparison-column-title-outside {
+  font-size: {{ section.settings.title_size }}px;
+  font-weight: {{ section.settings.title_weight }};
+  text-align: {{ section.settings.title_alignment }};
+  margin-bottom: 1rem;
+  width: {{ section.settings.columns_width }}px;
+}
+
+.mad-titles-wrapper {
+ display: flex;
+ gap: {{ section.settings.columns_gap }}px;
+ justify-content: center;
+ margin-bottom: 1rem;
+ flex-wrap: wrap;
+}
+
+@media screen and (min-width: 769px) {
+ .mad-comparison-column {
+   width: 100%;
+   max-width: {{ section.settings.columns_width }}px;
+   min-width: 400px;
+   flex: 1 1 {{ section.settings.columns_width }}px;
+ }
+}
+
+@media screen and (max-width: 768px) {
+ .mad-comparison-body {
+   flex-direction: column;
+   gap: {{ section.settings.columns_gap_mobile }}px;
+ }
+ 
+ .mad-comparison-column {
+   width: 100%;
+ }
+
+ .mad-comparison-column-title-outside {
+   width: 100%;
+   text-align: center;
+ }
+}
+
+.mad-comparison-column {
+ padding: 2rem;
+ border-radius: 8px;
+ display: flex;
+ flex-direction: column;
+}
+
+.mad-comparison-item {
+ margin-bottom: 1.5rem;
+ display: flex;
+ gap: 1rem;
+}
+
+.mad-comparison-item:last-child {
+ margin-bottom: 0;
+}
+
+.mad-comparison-item.mad-alignment-center {
+ align-items: center;
+}
+
+.mad-comparison-item.mad-alignment-top {
+ align-items: flex-start;
+}
+
+.mad-comparison-icon-wrapper {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  width: {{ section.settings.icons_size | plus: 12 }}px;
+}
+
+.mad-alignment-center .mad-comparison-icon-wrapper {
+  align-items: center;
+  padding-top: 0;
+}
+
+.mad-alignment-top .mad-comparison-icon-wrapper {
+  align-items: flex-start;
+  padding-top: 4px;
+}
+
+.mad-comparison-icon-wrapper svg {
+ width: {{ section.settings.icons_size }}px;
+ height: {{ section.settings.icons_size }}px;
+}
+
+.mad-comparison-content {
+ flex-grow: 1;
+}
+
+.mad-comparison-column.mad-comparison-left-column {
+ color: {{ section.settings.left_text_color }};
+ background-color: {{ section.settings.left_bg }};
+}
+
+.mad-comparison-column.mad-comparison-right-column {
+ color: {{ section.settings.right_text_color }};
+ background-color: {{ section.settings.right_bg }};
+}
+
+.mad-comparison-title {
+ font-weight: 600;
+ font-size: 1.1rem;
+ margin: 0 0 0.25rem 0;
+}
+
+.mad-comparison-text {
+ margin: 0;
+ font-size: 1rem;
+ line-height: 1.5;
+}
+
+@media screen and (min-width: 769px) {
+ .mad-comparison-column.mad-align-right .mad-comparison-item {
+   justify-content: flex-end;
+   text-align: right;
+ }
+ 
+ .mad-comparison-column.mad-align-right .mad-comparison-item {
+   flex-direction: row-reverse;
+ }
+}
+
+.mad-comparison-button {
+ display: block;
+ padding: 1rem 2rem;
+ background-color: #000;
+ color: #fff;
+ text-decoration: none;
+ border-radius: 4px;
+ text-align: center;
+ font-weight: 600;
+ margin: 0 auto;
+ max-width: 200px;
+}
+
+@media screen and (max-width: 480px) {
+ .mad-comparison-column {
+   padding: 1.5rem;
+ }
+ 
+ .mad-comparison-title {
+   font-size: 1rem;
+ }
+ 
+ .mad-comparison-text {
+   font-size: 0.9rem;
+ }
+ 
+ .mad-comparison-button {
+   width: 100%;
+   max-width: none;
+ }
+}
+</style>
+
+<div class="mad-comparison-section">
+ {% if section.settings.title_position == 'outside' and section.settings.left_table_title != blank or section.settings.right_table_title != blank %}
+   <div class="mad-titles-wrapper">
+     {% if section.settings.left_table_title != blank %}
+       <h2 class="mad-comparison-column-title-outside" style="color: {{ section.settings.left_text_color }}">
+         {{ section.settings.left_table_title }}
+       </h2>
+     {% endif %}
+     {% if section.settings.right_table_title != blank %}
+       <h2 class="mad-comparison-column-title-outside" style="color: {{ section.settings.right_text_color }}">
+         {{ section.settings.right_table_title }}
+       </h2>
+     {% endif %}
+   </div>
+ {% endif %}
+
+ <div class="mad-comparison-columns">
+   <div class="mad-comparison-column mad-comparison-left-column {% if section.settings.left_align_right %}mad-align-right{% endif %}">
+     {% if section.settings.title_position == 'inside' and section.settings.left_table_title != blank %}
+       <h2 class="mad-comparison-column-title">{{ section.settings.left_table_title }}</h2>
+     {% endif %}
+
+     {% for block in section.blocks %}
+       <div class="mad-comparison-item mad-alignment-{{ block.settings.content_alignment }}">
+         {% if block.settings.left_icon != 'none' %}
+           <div class="mad-comparison-icon-wrapper" style="color: {{ section.settings.left_icon_color }};">
+             {%- render 'icon',
+               icon: block.settings.left_icon,
+               class: 'icon'
+             -%}
+           </div>
+         {% endif %}
+         <div class="mad-comparison-content">
+           <p class="mad-comparison-title">{{ block.settings.left_title }}</p>
+           <p class="mad-comparison-text">{{ block.settings.left_text }}</p>
+         </div>
+       </div>
+     {% endfor %}
+   </div>
+
+   <div class="mad-comparison-column mad-comparison-right-column">
+     {% if section.settings.title_position == 'inside' and section.settings.right_table_title != blank %}
+       <h2 class="mad-comparison-column-title">{{ section.settings.right_table_title }}</h2>
+     {% endif %}
+
+     {% for block in section.blocks %}
+       <div class="mad-comparison-item mad-alignment-{{ block.settings.content_alignment }}">
+         {% if block.settings.right_icon != 'none' %}
+           <div class="mad-comparison-icon-wrapper" style="color: {{ section.settings.right_icon_color }};">
+             {%- render 'icon',
+               icon: block.settings.right_icon,
+               class: 'icon'
+             -%}
+           </div>
+         {% endif %}
+         <div class="mad-comparison-content">
+           <p class="mad-comparison-title">{{ block.settings.right_title }}</p>
+           <p class="mad-comparison-text">{{ block.settings.right_text }}</p>
+         </div>
+       </div>
+     {% endfor %}
+   </div>
+ </div>
+
+ {% if section.settings.button_link %}
+   <a href="{{ section.settings.button_link }}" class="mad-comparison-button">
+     {{ section.settings.button_text }}
+   </a>
+ {% endif %}
+</div>
